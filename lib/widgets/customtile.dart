@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatelessWidget {
@@ -10,10 +9,10 @@ class CustomListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(10),
+      margin: EdgeInsets.all(6),
       decoration: BoxDecoration(
-        color: Colors.blue,
-        borderRadius: BorderRadius.circular(15),
+        color: Color.fromARGB(255, 15, 50, 114),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: ListTile(
         title: Row(
