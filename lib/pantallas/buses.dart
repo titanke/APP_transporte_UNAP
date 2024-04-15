@@ -1,18 +1,7 @@
 import 'package:flutter/material.dart';
 
-class MiPantalla extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Buses Disponobles'),
-      ),
-      body: Listabuses(),
-    );
-  }
-}
 
-class Listabuses extends StatelessWidget {
+class Buses extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
