@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
-import 'package:flutter_map_location_marker/flutter_map_location_marker.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:geocoding/geocoding.dart';
@@ -9,12 +7,28 @@ import 'package:geolocator/geolocator.dart';
 import "package:app_transporte_prototipo/pantallas/buses.dart";
 import "package:app_transporte_prototipo/pantallas/horarios.dart";
 import "package:app_transporte_prototipo/pantallas/mapa.dart";
+import "package:app_transporte_prototipo/widgets/p_gracias.dart";
+import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
 import 'package:device_info_plus/device_info_plus.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+ WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
+}
+final todosLosDatos = [];
+
+
+Future<void> obtenerDocumentos() async {
+  CollectionReference _collectionRef =
+      FirebaseFirestore.instance.collection('locations');
+  QuerySnapshot querySnapshot = await _collectionRef.get();
+  todosLosDatos.addAll(querySnapshot.docs.map((doc) => doc.data()).toList());
+  
+  GeoPoint p = todosLosDatos[1]["location"];
+  print(p.longitude);
 }
 
 Future<String> calcularDistancia(LatLng busLocation) async {
@@ -47,12 +61,53 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.green,
       ),
-      home: Menu(),
+      home:  AnimatedSplashScreen(
+          splash: Scaffold(
+            //backgroundColor: Color.fromRGBO(3, 29, 51, 1),
+            body: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Container(
+                      height: 100,
+                      width: 100,
+                      decoration: BoxDecoration(
+                        image: DecorationImage(
+                          image: AssetImage(
+                              "assets/unap.png"),
+                          fit: BoxFit.fill,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      "UNAPGO",
+                      style: TextStyle(fontSize: 25,fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  Container(
+                    child: Text(
+                      "Buscando el bus mas cercano....",
+                      style: TextStyle(fontSize: 15),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          duration: 1000,
+          splashTransition: SplashTransition.fadeTransition,
+          //backgroundColor: Color.fromRGBO(3, 29, 51, 1),
+          nextScreen: Menu(),
+          splashIconSize: MediaQuery.of(context).size.height,
+        ),
+
     );
   }
 }
-
-//
 
 class Menu extends StatefulWidget {
   @override
@@ -61,13 +116,15 @@ class Menu extends StatefulWidget {
 
 class _MenuState extends State<Menu> {
   int _selectedIndex = 1;
-
   List<Widget> _widgetOptions = <Widget>[
     Horario(),
     Mapa(),
     Buses(),
   ];
-
+  void initState() {
+    super.initState();
+    obtenerDocumentos();
+  }
   @override
   Widget build(BuildContext context) {
     // Lista de títulos
@@ -116,17 +173,17 @@ class _MenuState extends State<Menu> {
           },
           items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home),
+              icon: Icon(Icons.map),
               label: 'Ruta',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.favorite),
+              icon: Icon(Icons.gps_fixed),
               label: 'Localizar',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: 'Buses',
-            ),
+                icon: Icon(FontAwesomeIcons.bus), 
+                label: 'Buses',
+              ),
           ],
         ),
       ),
@@ -202,30 +259,46 @@ class _CommentFormState extends State<CommentForm> {
         ),
         maxLines: 5, // Número máximo de líneas
       ),
+        Padding(
+          padding: EdgeInsets.all(8.0), // Ajusta el valor del padding según tus necesidades
+          child:    
+           SizedBox(
+        width: double.infinity, // Esto hace que el botón se extienda horizontalmente
+    child:     
+        ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              primary: Colors.blue, // Cambia esto al color que prefieras
+            ),          
+            onPressed: () async {
+            try {
+              DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+              AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+              String? deviceName = androidInfo.model; // Obtiene el nombre del dispositivo
 
-              ElevatedButton(
-                onPressed: () async {
-                  try {
-                    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-                    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-                    String? deviceName = androidInfo.model; // Obtiene el nombre del dispositivo
+              // Enviar comentario a Firestore
+              await FirebaseFirestore.instance
+              //                        .doc(deviceName) // Usa el nombre del dispositivo como el nombre del document
+                  .collection('comentarios')
+                  .add({
+                'comentario': _commentController.text,
+              });
+              print(_commentController.text);
+              Navigator.of(context).pop();
+            } catch (e) {
+              // Manejar el error
+              print("Ocurrió un error al enviar los datos: $e");
+            }
+                    Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Pgracias()),
+        );
 
-                    // Enviar comentario a Firestore
-                    await FirebaseFirestore.instance
-                        .collection('comentarios')
-                        .doc(deviceName) // Usa el nombre del dispositivo como el nombre del documento
-                        .set({
-                      'comentario': _commentController.text,
-                    });
-                    print(_commentController.text);
-                    Navigator.of(context).pop();
-                  } catch (e) {
-                    // Manejar el error
-                    print("Ocurrió un error al enviar los datos: $e");
-                  }
-                },
-                child: Text('Enviar'),
-              ),
+          },
+          child: Text('Enviar'
+          ,style:TextStyle(color: Colors.white)),
+        ),
+      ),
+            ),      
         ],
       ),
     );

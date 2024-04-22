@@ -1,25 +1,29 @@
 import 'package:flutter/material.dart';
+import "package:app_transporte_prototipo/main.dart";
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 
 class Buses extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListView.builder(
-      itemCount: 8,
+      itemCount: todosLosDatos.length,
       itemBuilder: (context, index) {
         return Card(
           child: Container(
           height: 80.0,
           child: ListTile(
               onTap: () {
-    // Vuelve a la pantalla principal cuando se toca el ListTile.
-    Navigator.pop(context);
-  },
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => Menu()),
+
+            );            },
         leading: Padding(
               padding: EdgeInsets.only(top:16.0), 
               child: Column(
                 children: <Widget>[
-                  Icon(Icons.bus_alert, color: Colors.blue),
+                  Icon(FontAwesomeIcons.bus, color: Colors.blue),
                   Text('A 100m'),
                 ],
               ),
