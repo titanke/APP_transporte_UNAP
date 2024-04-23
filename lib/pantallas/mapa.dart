@@ -76,8 +76,8 @@ class _MapaState extends State<Mapa> {
                                           child: Padding(
                                             padding: EdgeInsets.all(12.0),
                                             child: Text(
-                                              "Bus 1",
-                                              style: TextStyle(
+                                            'Bus ${todosLosDatos[index]["numero"]}',
+                                           style: TextStyle(
                                                 fontSize: 25,
                                                 fontWeight: FontWeight.bold,
                                                 color: Colors.white,
@@ -89,7 +89,7 @@ class _MapaState extends State<Mapa> {
                                             leftText: 'Hora de Partida',
                                             rightText: '10:00am'),
                                         FutureBuilder<String>(
-                                          future: calcularDistancia(busLocation),
+                                          future: calcularDistancia(location),
                                           builder: (BuildContext context,
                                               AsyncSnapshot<String> snapshot) {
                                             if (snapshot.connectionState ==
@@ -107,7 +107,7 @@ class _MapaState extends State<Mapa> {
                                           },
                                         ),
                                         FutureBuilder<String>(
-                                          future: obtenerDireccion(busLocation),
+                                          future: obtenerDireccion(location),
                                           builder: (BuildContext context,
                                               AsyncSnapshot<String> snapshot) {
                                             if (snapshot.connectionState ==
@@ -138,7 +138,7 @@ class _MapaState extends State<Mapa> {
                           child: Column(
                             children: <Widget>[
                               Icon(FontAwesomeIcons.bus), 
-                              Text('Bus ${index}'), 
+                              Text('Bus ${todosLosDatos[index]["numero"]}'), 
                             ],
                           ),
                         ),

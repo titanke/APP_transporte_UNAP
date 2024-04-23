@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import "package:app_transporte_prototipo/pantallas/ruta.dart";
+import "package:app_transporte_prototipo/main.dart";
+
 class Horario extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor:  Theme.of(context).colorScheme.primary,
       body: Column(
         children: <Widget>[
           IconButton(
