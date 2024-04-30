@@ -137,8 +137,8 @@ class _MapaState extends State<Mapa> {
                         child: Container(
                           child: Column(
                             children: <Widget>[
-                              Icon(FontAwesomeIcons.bus), 
-                              Text('Bus ${todosLosDatos[index]["numero"]}'), 
+                              Icon(FontAwesomeIcons.bus,color: Colors.blue,), 
+                              Text('Bus ${todosLosDatos[index]["numero"]}',style: TextStyle(color: Colors.blue),), 
                             ],
                           ),
                         ),

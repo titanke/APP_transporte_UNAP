@@ -18,7 +18,7 @@ void main() async {
   await Firebase.initializeApp();
   runApp(MyApp());
 }
-
+final colorper = Color.fromRGBO(7, 3, 49, 1); // Rojo sólido (RGB: 255, 0, 0)
 final todosLosDatos = [];
 Future<void> obtenerDocumentos() async {
   CollectionReference _collectionRef =
@@ -52,33 +52,29 @@ class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
-  
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'App Trasnporte',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        appBarTheme: AppBarTheme(
+          appBarTheme: AppBarTheme(
             backgroundColor: Color.fromARGB(255, 58, 89, 127),
-        ),
-        useMaterial3: true,
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Color.fromARGB(255, 95, 142, 207),
-          brightness: Brightness.dark,
-        ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: Color.fromARGB(255, 95, 142, 207)
-        ),
-        textTheme: TextTheme(
-          displayLarge: const TextStyle(
-            fontSize: 72,
-            fontWeight: FontWeight.bold,
           ),
-        ),
-        cardTheme: CardTheme(
-          color: Colors.white
-        )
-      ),
+          useMaterial3: true,
+          colorScheme: ColorScheme.fromSeed(
+            seedColor: Color.fromRGBO(2, 44, 255, 1),
+            brightness: Brightness.dark,
+          ),
+          bottomNavigationBarTheme: BottomNavigationBarThemeData(
+            backgroundColor: Color.fromARGB(255, 58, 89, 127),
+          ),
+          textTheme: TextTheme(
+            displayLarge: const TextStyle(
+              fontSize: 72,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          cardTheme: CardTheme(color: Colors.white)),
       initialRoute: '/',
       routes: {
         '/Horario': (context) => Horario(),
@@ -87,7 +83,7 @@ class MyApp extends StatelessWidget {
       },
       home: AnimatedSplashScreen(
         splash: Scaffold(
-          backgroundColor: Color.fromRGBO(3, 29, 51, 1),
+            backgroundColor: Color.fromARGB(255, 58, 89, 127),
           body: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -123,7 +119,7 @@ class MyApp extends StatelessWidget {
         ),
         duration: 1000,
         splashTransition: SplashTransition.fadeTransition,
-          backgroundColor: Color.fromRGBO(3, 29, 51, 1),
+        backgroundColor: Color.fromRGBO(3, 29, 51, 1),
         nextScreen: Menu(),
         splashIconSize: MediaQuery.of(context).size.height,
       ),
@@ -134,74 +130,76 @@ class MyApp extends StatelessWidget {
 class Menu extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
-  
 }
 
 class _MyHomePageState extends State<Menu> {
-
   void initState() {
     super.initState();
-     obtenerDocumentos();
-
+    obtenerDocumentos();
   }
 
   int _currentIndex = 1;
   final List<Widget> _children = [Horario(), Mapa(), Buses()];
-  final _titles = ['Ruta', 'UNAP GO', 'Buses'];
+  final _titles = ['Horarios y ruta', 'UNAP GO', 'Buses'];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-          title: Text(_titles[_currentIndex]),
-            actions: _currentIndex == 1 ? <Widget>[
-              IconButton(
-                icon: Icon(Icons.comment),
-                onPressed: () {
-                  showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      return AlertDialog(
-                        title: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text('Enviar comentario'),
-                            IconButton(
-                              icon: Icon(Icons.close),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        ),
-                        content: CommentForm(),
-                      );
-                    },
-                  );
-                },
-              ),
-            ] : null,
-          ),
+        title: Text(_titles[_currentIndex]),
+        actions: _currentIndex == 1
+            ? <Widget>[
+                IconButton(
+                  icon: Icon(Icons.comment),
+                  onPressed: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return AlertDialog(
+            backgroundColor: Color.fromARGB(255, 58, 89, 127),
+                          title: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text('Enviar comentario'),
+                              IconButton(
+                                icon: Icon(Icons.close),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          ),
+                          content: CommentForm(),
+                        );
+                      },
+                    );
+                  },
+                ),
+              ]
+            : null,
+      ),
       body: IndexedStack(
         index: _currentIndex,
         children: _children,
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
-        items: const <BottomNavigationBarItem> [
-            BottomNavigationBarItem(
-              icon: Icon(Icons.map),
-              label: 'Ruta',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.gps_fixed),
-              label: 'Localizar',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(FontAwesomeIcons.bus),
-              label: 'Buses',
-            ),
-          ],
+        items: const <BottomNavigationBarItem>[
+          BottomNavigationBarItem(
+          icon: Icon(Icons.map), // Cambia el color aquí
+            label: 'Horarios',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.gps_fixed),
+            label: 'Localizar',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(FontAwesomeIcons.bus),
+            label: 'Buses',
+          ),
+        ],
+          selectedItemColor: colorper, // Define el color del botón seleccionado
+
         onTap: (index) {
           setState(() {
             _currentIndex = index;
@@ -211,7 +209,6 @@ class _MyHomePageState extends State<Menu> {
     );
   }
 }
-
 
 class CommentForm extends StatefulWidget {
   @override
@@ -238,10 +235,11 @@ class _CommentFormState extends State<CommentForm> {
             },
             style: TextStyle(
               // Estilo del texto
-              fontSize: 18, // Tamaño del texto
+              fontSize: 18, 
+              color: Color.fromARGB(255, 0, 0, 0)
             ),
             decoration: InputDecoration(
-              fillColor: Colors.blue, // Color de fondo
+              fillColor: Colors.white, // Color de fondo
               filled: true,
               contentPadding: EdgeInsets.symmetric(
                 vertical: 25, // Espacio vertical
@@ -259,7 +257,7 @@ class _CommentFormState extends State<CommentForm> {
                   .infinity, // Esto hace que el botón se extienda horizontalmente
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.blue, // Cambia esto al color que prefieras
+                  primary: Colors.blueAccent, // Cambia esto al color que prefieras
                 ),
                 onPressed: () async {
                   try {

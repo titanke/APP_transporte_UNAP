@@ -10,19 +10,21 @@ class Pgracias extends StatelessWidget {
     });
 
     return Scaffold(
+      backgroundColor: Color.fromRGBO(99, 139, 211, 1),
       body: Center(
         child: Stack(
           children: [
-         
             // Center element with text
             Positioned(
-        
               child: Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Lottie.asset('assets/like.json'), // Replace with your center Lottie file path
-                    SizedBox(height: 10), // Add a small space between Lottie and text
+                    Lottie.asset(
+                        'assets/like.json'), // Replace with your center Lottie file path
+                    SizedBox(
+                        height:
+                            10), // Add a small space between Lottie and text
                     Text(
                       '¡Gracias por ayudarnos a mejorar tu experiencia!',
                       style: TextStyle(fontSize: 24),

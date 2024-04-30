@@ -3,7 +3,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
 
     <application
-        android:label="app_transporte_prototipo"
+        android:label="UNAP GO"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
